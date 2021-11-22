@@ -20,6 +20,7 @@ App({
           },
           success(res) {
             console.log(res.data)
+            this.globalData.openid = res.data.openid
           },
           fail(res) {
             console.log(res)
@@ -31,6 +32,6 @@ App({
   },
   globalData: {
     userInfo: null,
-    openId: null
+    openid: null
   }
 })

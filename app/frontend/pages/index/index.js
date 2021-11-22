@@ -17,6 +17,18 @@ Page({
       url: '../logs/logs'
     })
   },
+  // 事件处理函数
+  toEventList() {
+    wx.navigateTo({
+      url: '../event_list/event_list'
+    })
+  },
+  // 事件处理函数
+  toNewEvent() {
+    wx.navigateTo({
+      url: '../new_event/new_event'
+    })
+  },
   onLoad() {
     if (wx.getUserProfile) {
       this.setData({
@@ -42,7 +54,25 @@ Page({
       },
     })
   },
-  getUserProfile(e) {
+  subNotice(){
+    var app = getApp()
+    wx.request({
+      url: 'example.php', //仅为示例，并非真实的接口地址
+      data: {
+        openid: app.globalData.openid
+      },
+      header: {
+        'content-type': 'application/json' // 默认值
+      },
+      success(res) {
+        console.log(res.data)
+      },
+      fail(res) {
+        console.log(res)
+      },
+    })
+  },
+  getUserProfile() {
     // 推荐使用wx.getUserProfile获取用户信息，开发者每次通过该接口获取用户个人信息均需用户确认，开发者妥善保管用户快速填写的头像昵称，避免重复弹窗
     wx.getUserProfile({
       desc: '展示用户信息', // 声明获取用户个人信息后的用途，后续会展示在弹窗中，请谨慎填写
@@ -55,12 +85,4 @@ Page({
       }
     })
   },
-  getUserInfo(e) {
-    // 不推荐使用getUserInfo获取用户信息，预计自2021年4月13日起，getUserInfo将不再弹出弹窗，并直接返回匿名的用户个人信息
-    console.log(e)
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
-    })
-  }
 })

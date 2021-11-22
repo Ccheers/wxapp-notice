@@ -19,8 +19,10 @@
   </view>
   <view class="usermotto">
     <text class="user-motto">{{motto}}</text>
-    <button type="primary" wx:if="can_sub">开启提醒服务</button>
-    <button type="primary">提醒列表</button>
-    <button type="primary">新增提醒</button>
+    <block  wx:if="can_sub">
+      <button type="primary" bindtap="subNotice">开启提醒服务</button>
+    </block>
+    <button type="primary" bindtap="toEventList">提醒列表</button>
+    <button type="primary" bindtap="toNewEvent">新增提醒</button>
   </view>
 </view>
