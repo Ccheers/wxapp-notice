@@ -11,6 +11,9 @@
     "navigationBarTitleText": "Weixin",
     "navigationBarTextStyle": "black"
   },
+  "useExtendedLib": {
+    "weui": true
+  },
   "style": "v2",
   "sitemapLocation": "sitemap.json"
 }

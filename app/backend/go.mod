@@ -3,6 +3,7 @@ module github.com/Ccheers/wxapp-notice/app/backend
 go 1.16
 
 require (
+	github.com/envoyproxy/protoc-gen-validate v0.1.0
 	github.com/go-kratos/kratos/v2 v2.1.2
 	github.com/google/wire v0.5.0
 	google.golang.org/genproto v0.0.0-20211016002631-37fc39342514

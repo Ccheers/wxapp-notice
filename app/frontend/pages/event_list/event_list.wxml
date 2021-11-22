@@ -1,2 +1,13 @@
 <!--pages/event_list/event_list.wxml-->
-<text>pages/event_list/event_list.wxml</text>
+
+
+<mp-form-page title="列表">
+    <mp-cells ext-class="my-cells">
+        <mp-cell>
+            <mp-slideview wx:for="{{eventList}}" wx:key="id" bindbuttontap="" buttons="{{slideButtons}}" slideviewId="{{index}}" data="{{item.id}}">
+                <view>{{item.content}}</view>
+            </mp-slideview>
+        </mp-cell>
+    </mp-cells>
+
+</mp-form-page>

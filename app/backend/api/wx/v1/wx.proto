@@ -4,7 +4,7 @@ import "google/api/annotations.proto";
 import "validate/validate.proto";
 package api.wx.v1;
 
-option go_package = "github.com/Ccheers/wxapp-notice/app/backend;v1";
+option go_package = "github.com/Ccheers/wxapp-notice/app/backend/api/wx/v1;v1";
 option java_multiple_files = true;
 option java_package = "api.wx.v1";
 
@@ -12,6 +12,11 @@ service Wx {
   rpc Code2Session (Code2SessionRequest) returns (Code2SessionReply) {
     option (google.api.http) = {
       get: "/sns/jscode2session"
+    };
+  };
+  rpc SubscribeSend (SubscribeSendRequest) returns (SubscribeSendReply) {
+    option (google.api.http) = {
+      get: "/cgi-bin/message/subscribe/send"
     };
   };
 }
@@ -40,4 +45,19 @@ message Code2SessionReply {
   string unionid = 3;
   int64 errcode = 4;
   string errmsg = 5;
+}
+
+message SubscribeSendRequest {
+  string access_token = 1 [(validate.rules).string = {min_len:1}];
+  string touser = 2 [(validate.rules).string = {min_len:1}];
+  string template_id = 3 [(validate.rules).string = {min_len:1}];
+  map<string, TmplData> data = 4 [(validate.rules).string = {min_len:1}];
+}
+message TmplData {
+  string value = 1 [(validate.rules).string = {min_len:1}];
+}
+
+message SubscribeSendReply {
+  int64 errcode = 1;
+  string errmsg = 2;
 }

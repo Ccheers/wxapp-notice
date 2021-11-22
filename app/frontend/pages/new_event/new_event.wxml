@@ -1,2 +1,42 @@
 <!--pages/new_event/new_event.wxml-->
-<text>pages/new_event/new_event.wxml</text>
+<!--WXML示例代码-->
+<mp-form-page title="提醒表单">
+    <mp-form id="form" rules="{{rules}}" models="{{formData}}">
+    </mp-form>
+    <mp-cells ext-class="my-cells">
+        <mp-cell title="频率">
+            <picker bindchange="onFrequencyPickerChange" value="{{form.frequency}}" range="{{frequencyOptions}}">
+                <view class="weui-input">
+                    {{frequencyOptions[form.frequency]}}
+                </view>
+            </picker>
+        </mp-cell>
+        <mp-cell title="日期" wx:if="{{form.frequency == 2}}">
+            <picker bindchange="onFrequencyDetailPickerChange" value="{{form.frequencyDetail}}" range="{{frequencyDetailWeekOptions}}">
+                <view class="weui-input">
+                    {{frequencyDetailWeekOptions[form.frequencyDetail]}}
+                </view>
+            </picker>
+        </mp-cell>
+        <mp-cell title="日期" wx:if="{{form.frequency == 3}}">
+            <picker bindchange="onFrequencyDetailPickerChange" value="{{form.frequencyDetail}}" range="{{frequencyDetailMonthOptions}}">
+                <view class="weui-input">
+                    {{frequencyDetailMonthOptions[form.frequencyDetail]}}
+                </view>
+            </picker>
+        </mp-cell>
+        <mp-cell title="时间">
+            <picker bindchange="onTimePickerChange" mode="time" value="{{form.time}}">
+                <view class="weui-input">
+                    {{form.time}}
+                </view>
+            </picker>
+        </mp-cell>
+        <mp-cell title="内容">
+            <textarea bindinput="onInputChange" cols="30" rows="10"></textarea>
+        </mp-cell>
+    </mp-cells>
+    <view slot="button">
+        <button class="weui-btn" type="primary" bindtap="submitForm">确定</button>
+    </view>
+</mp-form-page>

@@ -5,6 +5,18 @@ Page({
    * 页面的初始数据
    */
   data: {
+    slideButtons: [{
+      type: "warn",
+      text: "删除"
+    }],
+    eventList: [
+      {
+        id:1,
+        content: "sadas"
+      }
+    ]
+  },
+  onTapSlideButton(index, data){
 
   },
 
