@@ -20,6 +20,7 @@ const _ = grpc.SupportPackageIsVersion7
 type WxClient interface {
 	Code2Session(ctx context.Context, in *Code2SessionRequest, opts ...grpc.CallOption) (*Code2SessionReply, error)
 	SubscribeSend(ctx context.Context, in *SubscribeSendRequest, opts ...grpc.CallOption) (*SubscribeSendReply, error)
+	GetAccessToken(ctx context.Context, in *GetAccessTokenRequest, opts ...grpc.CallOption) (*GetAccessTokenReply, error)
 }
 
 type wxClient struct {
@@ -48,12 +49,22 @@ func (c *wxClient) SubscribeSend(ctx context.Context, in *SubscribeSendRequest, 
 	return out, nil
 }
 
+func (c *wxClient) GetAccessToken(ctx context.Context, in *GetAccessTokenRequest, opts ...grpc.CallOption) (*GetAccessTokenReply, error) {
+	out := new(GetAccessTokenReply)
+	err := c.cc.Invoke(ctx, "/api.wx.v1.Wx/GetAccessToken", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // WxServer is the server API for Wx service.
 // All implementations must embed UnimplementedWxServer
 // for forward compatibility
 type WxServer interface {
 	Code2Session(context.Context, *Code2SessionRequest) (*Code2SessionReply, error)
 	SubscribeSend(context.Context, *SubscribeSendRequest) (*SubscribeSendReply, error)
+	GetAccessToken(context.Context, *GetAccessTokenRequest) (*GetAccessTokenReply, error)
 	mustEmbedUnimplementedWxServer()
 }
 
@@ -66,6 +77,9 @@ func (UnimplementedWxServer) Code2Session(context.Context, *Code2SessionRequest)
 }
 func (UnimplementedWxServer) SubscribeSend(context.Context, *SubscribeSendRequest) (*SubscribeSendReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method SubscribeSend not implemented")
+}
+func (UnimplementedWxServer) GetAccessToken(context.Context, *GetAccessTokenRequest) (*GetAccessTokenReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetAccessToken not implemented")
 }
 func (UnimplementedWxServer) mustEmbedUnimplementedWxServer() {}
 
@@ -116,6 +130,24 @@ func _Wx_SubscribeSend_Handler(srv interface{}, ctx context.Context, dec func(in
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Wx_GetAccessToken_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetAccessTokenRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(WxServer).GetAccessToken(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.wx.v1.Wx/GetAccessToken",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(WxServer).GetAccessToken(ctx, req.(*GetAccessTokenRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Wx_ServiceDesc is the grpc.ServiceDesc for Wx service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -130,6 +162,10 @@ var Wx_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "SubscribeSend",
 			Handler:    _Wx_SubscribeSend_Handler,
+		},
+		{
+			MethodName: "GetAccessToken",
+			Handler:    _Wx_GetAccessToken_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

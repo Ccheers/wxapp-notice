@@ -21,7 +21,8 @@ func NewWxUseCase(wxRepo WxRepo, l log.Logger) *WxUseCase {
 
 type WxRepo interface {
 	Code2Session(ctx context.Context, request *pb.Code2SessionRequest) (*pb.Code2SessionReply, error)
-	ImplWxRepo()
+	SubscribeSend(ctx context.Context, request *pb.SubscribeSendRequest) (*pb.SubscribeSendReply, error)
+	GetAccessToken(ctx context.Context, request *pb.GetAccessTokenRequest) (*pb.GetAccessTokenReply, error)
 }
 
 func (receiver *WxUseCase) Code2Session(ctx context.Context, code string) (*pb.Code2SessionReply, error) {

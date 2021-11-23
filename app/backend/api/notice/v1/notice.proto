@@ -28,7 +28,7 @@ message SubscribeNoticeRequest {
   string openid = 1 [(validate.rules).string = {min_len:1}];
 }
 message SubscribeNoticeReply {
-  string code = 1;
+  int64 code = 1;
   string msg = 2;
 }
 
