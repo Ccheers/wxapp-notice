@@ -33,3 +33,14 @@ func (receiver *WxUseCase) Code2Session(ctx context.Context, code string) (*pb.C
 		GrantType: "authorization_code",
 	})
 }
+func (receiver *WxUseCase) GetAccessToken(ctx context.Context) (string, error) {
+	res, err := receiver.wxRepo.GetAccessToken(ctx, &pb.GetAccessTokenRequest{
+		GrantType: "client_credential",
+		Appid:     receiver.conf.AppId,
+		Secret:    receiver.conf.AppSecret,
+	})
+	if err != nil {
+		return "", err
+	}
+	return res.AccessToken, nil
+}

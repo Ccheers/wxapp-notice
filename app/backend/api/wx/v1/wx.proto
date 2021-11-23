@@ -16,7 +16,8 @@ service Wx {
   };
   rpc SubscribeSend (SubscribeSendRequest) returns (SubscribeSendReply) {
     option (google.api.http) = {
-      get: "/cgi-bin/message/subscribe/send"
+      post: "/cgi-bin/message/subscribe/send",
+      body: "*"
     };
   };
   rpc GetAccessToken (GetAccessTokenRequest) returns (GetAccessTokenReply) {
