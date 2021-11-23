@@ -3,6 +3,7 @@ package data
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/biz"
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/pkg/itob"
@@ -21,7 +22,12 @@ func NewJobRepoImpl(data *Data, logger log.Logger) biz.JobRepo {
 
 func (j *JobRepoImpl) PutJob(ctx context.Context, job *biz.Job) (*biz.Job, error) {
 	err := j.data.db.Update(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte(j.TableName()))
+
+		b, err := tx.CreateBucketIfNotExists([]byte(j.TableNameWithOpenID(job.Openid)))
+
+		if err != nil {
+			return err
+		}
 
 		if job.ID == 0 {
 			id, err := b.NextSequence()
@@ -47,17 +53,21 @@ func (j *JobRepoImpl) PutJob(ctx context.Context, job *biz.Job) (*biz.Job, error
 	return job, nil
 }
 
-func (j *JobRepoImpl) DeleteJob(ctx context.Context, jobID uint64) error {
+func (j *JobRepoImpl) DeleteJob(ctx context.Context, openid string, jobID uint64) error {
 	return j.data.db.Update(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte(j.TableName()))
+		b, err := tx.CreateBucketIfNotExists([]byte(j.TableNameWithOpenID(openid)))
+		if err != nil {
+			return err
+		}
 		return b.Delete(itob.Itob(jobID))
 	})
 }
 
-func (j *JobRepoImpl) GetAllJobs(ctx context.Context) ([]*biz.Job, error) {
+func (j *JobRepoImpl) GetAllJobs(ctx context.Context, openid string) ([]*biz.Job, error) {
 	jobs := make([]*biz.Job, 0)
 	err := j.data.db.View(func(tx *bbolt.Tx) error {
-		c := tx.Bucket([]byte(j.TableName())).Cursor()
+		b := tx.Bucket([]byte(j.TableNameWithOpenID(openid)))
+		c := b.Cursor()
 
 		for k, v := c.First(); k != nil; k, v = c.Next() {
 			job := new(biz.Job)
@@ -77,15 +87,16 @@ func (j *JobRepoImpl) GetAllJobs(ctx context.Context) ([]*biz.Job, error) {
 	return jobs, nil
 }
 
-func (j *JobRepoImpl) GetJobByID(ctx context.Context, jobID uint64) (job *biz.Job, err error) {
+func (j *JobRepoImpl) GetJobByID(ctx context.Context, openid string, jobID uint64) (job *biz.Job, err error) {
 	job = new(biz.Job)
 
 	err = j.data.db.View(func(tx *bbolt.Tx) error {
-		b := tx.Bucket([]byte(j.TableName()))
+
+		b := tx.Bucket([]byte(j.TableNameWithOpenID(openid)))
 
 		v := b.Get(itob.Itob(jobID))
 		j.log.Infof("v: %s", string(v))
-		err := json.Unmarshal(v, job)
+		err = json.Unmarshal(v, job)
 		if err != nil {
 			return err
 		}
@@ -96,4 +107,8 @@ func (j *JobRepoImpl) GetJobByID(ctx context.Context, jobID uint64) (job *biz.Jo
 
 func (j *JobRepoImpl) TableName() string {
 	return "job"
+}
+
+func (j *JobRepoImpl) TableNameWithOpenID(openid string) string {
+	return fmt.Sprintf("job:%s", openid)
 }

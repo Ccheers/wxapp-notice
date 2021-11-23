@@ -5,6 +5,7 @@ const subTmplID = "TPxDR87VAsidwvX6UKdlVPbKVdwPl4qnhxRV8qFoAYA"
 Page({
   data: {
     can_sub: true,
+    loading: true,
     userInfo: {},
     hasUserInfo: false,
     canIUse: wx.canIUse('button.open-type.getUserInfo'),
@@ -30,15 +31,28 @@ Page({
     })
   },
   onLoad() {
-    
     if (wx.getUserProfile) {
       this.setData({
         canIUseGetUserProfile: true
       })
     }
-    setTimeout(()=>{
+
+    if (!app.globalData.launched) {
+
+      app.globalData.launchedCallback4Index = () => {
+        this.checkSub()
+        this.setData({
+          loading: false
+        })
+      }
+      
+    }else{
       this.checkSub()
-    },2000)
+        this.setData({
+          loading: false
+        })
+    }
+
   },
   checkSub() {
     var subed = true
@@ -56,7 +70,7 @@ Page({
       })
       return
     }
-    console.log(app.globalData)
+
     wx.request({
       url: app.globalData.serverHost + '/notice/v1/check', //仅为示例，并非真实的接口地址
       method: "POST",
@@ -84,7 +98,7 @@ Page({
   subNotice() {
     wx.requestSubscribeMessage({
       tmplIds: [subTmplID],
-      success(e) {
+      success: (e) => {
         if (e[subTmplID] == "accept") {
           wx.request({
             url: app.globalData.serverHost + '/notice/v1/sub', //仅为示例，并非真实的接口地址
@@ -95,7 +109,8 @@ Page({
             header: {
               'content-type': 'application/json' // 默认值
             },
-            success(res) {
+            success: (res) => {
+              this.checkSub()
               console.log(res.data)
             },
             fail(res) {

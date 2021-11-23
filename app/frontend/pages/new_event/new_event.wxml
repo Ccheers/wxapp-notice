@@ -25,6 +25,14 @@
                 </view>
             </picker>
         </mp-cell>
+
+        <mp-cell title="日期" wx:if="{{form.frequency == 0}}">
+            <picker bindchange="onFrequencyDetailPickerChange" mode="date" value="{{form.frequencyDetail}}">
+                <view class="weui-input">
+                    {{form.frequencyDetail}}
+                </view>
+            </picker>
+        </mp-cell>
         <mp-cell title="时间">
             <picker bindchange="onTimePickerChange" mode="time" value="{{form.time}}">
                 <view class="weui-input">
@@ -40,3 +48,4 @@
         <button class="weui-btn" type="primary" bindtap="submitForm">确定</button>
     </view>
 </mp-form-page>
+<mp-toptips msg="{{msg}}" type="{{msgType}}" show="{{msg}}"></mp-toptips>

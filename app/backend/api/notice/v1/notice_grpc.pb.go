@@ -20,6 +20,9 @@ const _ = grpc.SupportPackageIsVersion7
 type NoticeClient interface {
 	SubscribeNotice(ctx context.Context, in *SubscribeNoticeRequest, opts ...grpc.CallOption) (*SubscribeNoticeReply, error)
 	CheckSubscribeStatus(ctx context.Context, in *CheckSubscribeStatusRequest, opts ...grpc.CallOption) (*CheckSubscribeStatusReply, error)
+	PutNotice(ctx context.Context, in *PutNoticeRequest, opts ...grpc.CallOption) (*PutNoticeReply, error)
+	DeleteNotice(ctx context.Context, in *DeleteNoticeRequest, opts ...grpc.CallOption) (*DeleteNoticeReply, error)
+	ListNotice(ctx context.Context, in *ListNoticeRequest, opts ...grpc.CallOption) (*ListNoticeReply, error)
 }
 
 type noticeClient struct {
@@ -48,12 +51,42 @@ func (c *noticeClient) CheckSubscribeStatus(ctx context.Context, in *CheckSubscr
 	return out, nil
 }
 
+func (c *noticeClient) PutNotice(ctx context.Context, in *PutNoticeRequest, opts ...grpc.CallOption) (*PutNoticeReply, error) {
+	out := new(PutNoticeReply)
+	err := c.cc.Invoke(ctx, "/api.notice.v1.Notice/PutNotice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *noticeClient) DeleteNotice(ctx context.Context, in *DeleteNoticeRequest, opts ...grpc.CallOption) (*DeleteNoticeReply, error) {
+	out := new(DeleteNoticeReply)
+	err := c.cc.Invoke(ctx, "/api.notice.v1.Notice/DeleteNotice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *noticeClient) ListNotice(ctx context.Context, in *ListNoticeRequest, opts ...grpc.CallOption) (*ListNoticeReply, error) {
+	out := new(ListNoticeReply)
+	err := c.cc.Invoke(ctx, "/api.notice.v1.Notice/ListNotice", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // NoticeServer is the server API for Notice service.
 // All implementations must embed UnimplementedNoticeServer
 // for forward compatibility
 type NoticeServer interface {
 	SubscribeNotice(context.Context, *SubscribeNoticeRequest) (*SubscribeNoticeReply, error)
 	CheckSubscribeStatus(context.Context, *CheckSubscribeStatusRequest) (*CheckSubscribeStatusReply, error)
+	PutNotice(context.Context, *PutNoticeRequest) (*PutNoticeReply, error)
+	DeleteNotice(context.Context, *DeleteNoticeRequest) (*DeleteNoticeReply, error)
+	ListNotice(context.Context, *ListNoticeRequest) (*ListNoticeReply, error)
 	mustEmbedUnimplementedNoticeServer()
 }
 
@@ -66,6 +99,15 @@ func (UnimplementedNoticeServer) SubscribeNotice(context.Context, *SubscribeNoti
 }
 func (UnimplementedNoticeServer) CheckSubscribeStatus(context.Context, *CheckSubscribeStatusRequest) (*CheckSubscribeStatusReply, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method CheckSubscribeStatus not implemented")
+}
+func (UnimplementedNoticeServer) PutNotice(context.Context, *PutNoticeRequest) (*PutNoticeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PutNotice not implemented")
+}
+func (UnimplementedNoticeServer) DeleteNotice(context.Context, *DeleteNoticeRequest) (*DeleteNoticeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteNotice not implemented")
+}
+func (UnimplementedNoticeServer) ListNotice(context.Context, *ListNoticeRequest) (*ListNoticeReply, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method ListNotice not implemented")
 }
 func (UnimplementedNoticeServer) mustEmbedUnimplementedNoticeServer() {}
 
@@ -116,6 +158,60 @@ func _Notice_CheckSubscribeStatus_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _Notice_PutNotice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(PutNoticeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NoticeServer).PutNotice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.notice.v1.Notice/PutNotice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NoticeServer).PutNotice(ctx, req.(*PutNoticeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Notice_DeleteNotice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteNoticeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NoticeServer).DeleteNotice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.notice.v1.Notice/DeleteNotice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NoticeServer).DeleteNotice(ctx, req.(*DeleteNoticeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _Notice_ListNotice_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListNoticeRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(NoticeServer).ListNotice(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/api.notice.v1.Notice/ListNotice",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(NoticeServer).ListNotice(ctx, req.(*ListNoticeRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Notice_ServiceDesc is the grpc.ServiceDesc for Notice service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -130,6 +226,18 @@ var Notice_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "CheckSubscribeStatus",
 			Handler:    _Notice_CheckSubscribeStatus_Handler,
+		},
+		{
+			MethodName: "PutNotice",
+			Handler:    _Notice_PutNotice_Handler,
+		},
+		{
+			MethodName: "DeleteNotice",
+			Handler:    _Notice_DeleteNotice_Handler,
+		},
+		{
+			MethodName: "ListNotice",
+			Handler:    _Notice_ListNotice_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

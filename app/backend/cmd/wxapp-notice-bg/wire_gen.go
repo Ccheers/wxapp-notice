@@ -8,6 +8,7 @@ package main
 import (
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/biz"
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/conf"
+	"github.com/Ccheers/wxapp-notice/app/backend/internal/cron"
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/data"
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/server"
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/service"
@@ -28,10 +29,11 @@ func initApp(confServer *conf.Server, confData *conf.Data, wxAppConfig *conf.WxA
 	}
 	jobRepo := data.NewJobRepoImpl(dataData, logger)
 	noticeRepo := data.NewNoticeRepoImpl(dataData, logger)
-	noticeUseCase := biz.NewNoticeUseCase(jobRepo, noticeRepo, logger)
+	cronCron := cron.NewCron(logger)
+	noticeUseCase := biz.NewNoticeUseCase(jobRepo, wxRepo, noticeRepo, logger, cronCron, wxAppConfig)
 	noticeService := service.NewNoticeService(noticeUseCase, logger)
 	httpServer := server.NewHTTPServer(confServer, wxService, noticeService, logger)
-	app := newApp(logger, httpServer)
+	app := newApp(logger, httpServer, cronCron)
 	return app, func() {
 		cleanup()
 	}, nil

@@ -7,6 +7,7 @@ package main
 import (
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/biz"
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/conf"
+	"github.com/Ccheers/wxapp-notice/app/backend/internal/cron"
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/data"
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/server"
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/service"
@@ -17,5 +18,5 @@ import (
 
 // initApp init kratos application.
 func initApp(*conf.Server, *conf.Data, *conf.WxAppConfig, log.Logger) (*kratos.App, func(), error) {
-	panic(wire.Build(server.ProviderSet, data.ProviderSet, biz.ProviderSet, service.ProviderSet, newApp))
+	panic(wire.Build(server.ProviderSet, data.ProviderSet, biz.ProviderSet, service.ProviderSet, cron.Provider, newApp))
 }

@@ -43,3 +43,28 @@ func (s *NoticeService) CheckSubscribeStatus(ctx context.Context, req *pb.CheckS
 		Msg:        "success",
 	}, nil
 }
+
+func (s *NoticeService) DeleteNotice(ctx context.Context, request *pb.DeleteNoticeRequest) (*pb.DeleteNoticeReply, error) {
+	panic("implement me")
+}
+
+func (s *NoticeService) ListNotice(ctx context.Context, request *pb.ListNoticeRequest) (*pb.ListNoticeReply, error) {
+	panic("implement me")
+}
+
+func (s *NoticeService) PutNotice(ctx context.Context, request *pb.PutNoticeRequest) (*pb.PutNoticeReply, error) {
+	_, err := s.noticeUseCase.AddNotice(ctx, &biz.Job{
+		Openid:          request.GetNotice().GetOpenid(),
+		Content:         request.GetNotice().GetContent(),
+		Time:            request.GetNotice().GetTime(),
+		Frequency:       request.GetNotice().GetFrequency(),
+		FrequencyDetail: request.GetNotice().GetFrequencyDetail(),
+	})
+	if err != nil {
+		return nil, err
+	}
+	return &pb.PutNoticeReply{
+		Code: http.StatusOK,
+		Msg:  "success",
+	}, nil
+}

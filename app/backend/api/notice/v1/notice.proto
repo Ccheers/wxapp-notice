@@ -22,6 +22,27 @@ service Notice {
       body: "*"
     };
   };
+
+  rpc PutNotice (PutNoticeRequest) returns (PutNoticeReply) {
+    option (google.api.http) = {
+      post: "/notice/v1/put",
+      body: "*"
+    };
+  };
+
+  rpc DeleteNotice (DeleteNoticeRequest) returns (DeleteNoticeReply) {
+    option (google.api.http) = {
+      post: "/notice/v1/del",
+      body: "*"
+    };
+  };
+
+  rpc ListNotice (ListNoticeRequest) returns (ListNoticeReply) {
+    option (google.api.http) = {
+      post: "/notice/v1/list",
+      body: "*"
+    };
+  };
 }
 
 message SubscribeNoticeRequest {
@@ -39,4 +60,40 @@ message CheckSubscribeStatusReply {
   bool subscribed = 1;
   int64 code = 2;
   string msg = 3;
+}
+
+message PutNoticeRequest {
+  NoticeInfo notice = 1;
+}
+message PutNoticeReply {
+  int64 code = 1;
+  string msg = 2;
+}
+
+message DeleteNoticeRequest {
+  string id = 1 [(validate.rules).string = {min_len:1}];
+}
+
+message DeleteNoticeReply {
+  int64 code = 1;
+  string msg = 2;
+}
+
+message ListNoticeRequest {
+  string openid = 1 [(validate.rules).string = {min_len:1}];
+}
+
+message ListNoticeReply {
+  int64 code = 1;
+  string msg = 2;
+  repeated NoticeInfo notice_info = 3;
+}
+
+message NoticeInfo {
+  int64 id = 1;
+  string openid = 2 [(validate.rules).string = {min_len:1}];
+  string content = 3 [(validate.rules).string = {min_len:1}];
+  string time = 4 [(validate.rules).string = {min_len:1}];
+  int64 frequency = 5 [(validate.rules).int64 = {gte:0}];
+  string frequency_detail = 6 [(validate.rules).string = {min_len:1}];
 }

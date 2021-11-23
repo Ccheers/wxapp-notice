@@ -5,6 +5,7 @@ import (
 	"os"
 
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/conf"
+	"github.com/Ccheers/wxapp-notice/app/backend/internal/cron"
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/config"
 	"github.com/go-kratos/kratos/v2/config/file"
@@ -29,7 +30,7 @@ func init() {
 	flag.StringVar(&flagconf, "conf", "../../configs", "config path, eg: -conf config.yaml")
 }
 
-func newApp(logger log.Logger, hs *http.Server) *kratos.App {
+func newApp(logger log.Logger, hs *http.Server, c *cron.Cron) *kratos.App {
 	return kratos.New(
 		kratos.ID(id),
 		kratos.Name(Name),
@@ -38,6 +39,7 @@ func newApp(logger log.Logger, hs *http.Server) *kratos.App {
 		kratos.Logger(logger),
 		kratos.Server(
 			hs,
+			c,
 		),
 	)
 }
@@ -63,6 +65,7 @@ func main() {
 	if err := c.Load(); err != nil {
 		panic(err)
 	}
+	logger.Log(log.LevelInfo, "123123123")
 
 	var bc conf.Bootstrap
 	if err := c.Scan(&bc); err != nil {

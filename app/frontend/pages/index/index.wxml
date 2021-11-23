@@ -1,5 +1,8 @@
 <!--index.wxml-->
-<view class="container">
+<mp-loading show="{{loading}}">
+</mp-loading>
+
+<view class="container" wx:if="{{!loading}}">
   <view class="userinfo">
     <block wx:if="{{canIUseOpenData}}">
       <view class="userinfo-avatar" bindtap="bindViewTap">
@@ -19,7 +22,7 @@
   </view>
   <view class="usermotto">
     <text class="user-motto">{{motto}}</text>
-    <block  wx:if="{{can_sub}}">
+    <block wx:if="{{can_sub}}">
       <button type="primary" bindtap="subNotice">开启提醒服务</button>
     </block>
     <button type="primary" bindtap="toEventList">提醒列表</button>

@@ -21,7 +21,8 @@ App({
           },
           success: (res) => {
             this.globalData.openid = res.data.openid
-            console.log(this.globalData)
+            this.globalData.launched = true
+            this.globalData.launchedCallback4Index()
           },
           fail(res) {
             console.log(res)
@@ -34,6 +35,8 @@ App({
   globalData: {
     userInfo: null,
     openid: null,
-    serverHost: serverHost
+    serverHost: serverHost,
+    launched: false,
+    launchedCallback4Index: () => {}
   }
 })
