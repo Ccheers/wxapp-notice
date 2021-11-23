@@ -49,6 +49,7 @@ func (w *WxRepoImpl) SubscribeSend(ctx context.Context, request *pb.SubscribeSen
 
 func (w *WxRepoImpl) GetAccessToken(ctx context.Context, request *pb.GetAccessTokenRequest) (*pb.GetAccessTokenReply, error) {
 	err := w.accessTokenLocker.TryLock(lockTimeOut)
+	defer w.accessTokenLocker.Unlock()
 	if err != nil {
 		return nil, err
 	}
