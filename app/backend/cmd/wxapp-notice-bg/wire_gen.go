@@ -20,11 +20,19 @@ import (
 // initApp init kratos application.
 func initApp(confServer *conf.Server, confData *conf.Data, wxAppConfig *conf.WxAppConfig, logger log.Logger) (*kratos.App, func(), error) {
 	wxRepo := data.NewWxRepoImpl(logger)
-	wxUseCase := biz.NewWxUseCase(wxRepo, logger)
+	wxUseCase := biz.NewWxUseCase(wxRepo, logger, wxAppConfig)
 	wxService := service.NewWxService(wxUseCase)
-	httpServer := server.NewHTTPServer(confServer, wxService, logger)
-	grpcServer := server.NewGRPCServer(confServer, wxService, logger)
-	app := newApp(logger, httpServer, grpcServer)
+	dataData, cleanup, err := data.NewData(confData, logger)
+	if err != nil {
+		return nil, nil, err
+	}
+	jobRepo := data.NewJobRepoImpl(dataData, logger)
+	noticeRepo := data.NewNoticeRepoImpl(dataData, logger)
+	noticeUseCase := biz.NewNoticeUseCase(jobRepo, noticeRepo, logger)
+	noticeService := service.NewNoticeService(noticeUseCase, logger)
+	httpServer := server.NewHTTPServer(confServer, wxService, noticeService, logger)
+	app := newApp(logger, httpServer)
 	return app, func() {
+		cleanup()
 	}, nil
 }

@@ -30,38 +30,53 @@ Page({
     })
   },
   onLoad() {
+    
     if (wx.getUserProfile) {
       this.setData({
         canIUseGetUserProfile: true
       })
     }
-    this.checkSub()
+    setTimeout(()=>{
+      this.checkSub()
+    },3000)
   },
   checkSub() {
     var subed = true
     wx.getSetting({
       withSubscriptions: true,
-      success(res){
-        if(res['subscriptionsSetting'][subTmplID]=="accept"){
+      success(res) {
+        if (res['subscriptionsSetting'][subTmplID] == "accept") {
           subed = false
         }
       },
     })
-    if(!subed){
-      can_sub = true
+    if (!subed) {
+      this.setData({
+        can_sub: true
+      })
+      return
     }
+    console.log(app.globalData)
     wx.request({
-      url: 'example.php', //仅为示例，并非真实的接口地址
+      url: app.globalData.serverHost + '/notice/v1/check', //仅为示例，并非真实的接口地址
+      method: "POST",
       data: {
-        x: '',
+        openid: app.globalData.openid,
       },
       header: {
         'content-type': 'application/json' // 默认值
       },
-      success(res) {
+      success: (res) => {
         console.log(res.data)
+
+        this.setData({
+          can_sub: !res.data.subscribed
+        })
       },
-      fail(res) {
+      fail: (res) => {
+        this.setData({
+          can_sub: true
+        })
         console.log(res)
       },
     })
@@ -71,9 +86,9 @@ Page({
       tmplIds: [subTmplID],
       success(e) {
         if (e[subTmplID] == "accept") {
-          var app = getApp()
           wx.request({
-            url: 'example.php', //仅为示例，并非真实的接口地址
+            url: app.globalData.serverHost + '/notice/v1/sub', //仅为示例，并非真实的接口地址
+            method: "POST",
             data: {
               openid: app.globalData.openid
             },

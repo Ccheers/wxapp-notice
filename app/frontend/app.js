@@ -1,3 +1,4 @@
+const serverHost = "https://wxapi.ericcai.fun"
 // app.js
 App({
   onLaunch() {
@@ -10,17 +11,17 @@ App({
     wx.login({
       success: res => {
         console.log(res)
-        wx.request({ 
-          url: 'example.php', //仅为示例，并非真实的接口地址
+        wx.request({
+          url: this.globalData.serverHost + '/sns/jscode2session', //仅为示例，并非真实的接口地址
           data: {
-            code: res.code,
+            js_code: res.code,
           },
           header: {
             'content-type': 'application/json' // 默认值
           },
-          success(res) {
-            console.log(res.data)
+          success: (res) => {
             this.globalData.openid = res.data.openid
+            console.log(this.globalData)
           },
           fail(res) {
             console.log(res)
@@ -32,6 +33,7 @@ App({
   },
   globalData: {
     userInfo: null,
-    openid: null
+    openid: null,
+    serverHost: serverHost
   }
 })

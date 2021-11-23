@@ -34,8 +34,13 @@ service Wx {
 message Code2SessionRequest {
   string appid = 1;
   string secret = 2;
-  string js_code = 3 [(validate.rules).string = {min_len:1}];
-  string grant_type = 4;
+  string js_code = 3 [
+    (validate.rules).string = {min_len:1},
+    json_name = "js_code"
+  ];
+  string grant_type = 5 [
+    json_name = "grant_type"
+  ];
 }
 
 //    属性	类型	说明
@@ -53,9 +58,15 @@ message Code2SessionReply {
 }
 
 message SubscribeSendRequest {
-  string access_token = 1 [(validate.rules).string = {min_len:1}];
+  string access_token = 1 [
+    (validate.rules).string = {min_len:1},
+    json_name = "access_token"
+  ];
   string touser = 2 [(validate.rules).string = {min_len:1}];
-  string template_id = 3 [(validate.rules).string = {min_len:1}];
+  string template_id = 3 [
+    (validate.rules).string = {min_len:1},
+    json_name = "template_id"
+  ];
   map<string, TmplData> data = 4 [(validate.rules).string = {min_len:1}];
 }
 message TmplData {
@@ -67,7 +78,10 @@ message SubscribeSendReply {
   string errmsg = 2;
 }
 message GetAccessTokenRequest {
-  string grant_type = 1 [(validate.rules).string = {min_len:1}];
+  string grant_type = 1 [
+    (validate.rules).string = {min_len:1},
+    json_name = "grant_type"
+  ];
   string appid = 2 [(validate.rules).string = {min_len:1}];
   string secret = 3 [(validate.rules).string = {min_len:1}];
 }

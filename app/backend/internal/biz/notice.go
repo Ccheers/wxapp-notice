@@ -5,6 +5,7 @@ import (
 	"errors"
 
 	pb "github.com/Ccheers/wxapp-notice/app/backend/api/notice/v1"
+	"github.com/go-kratos/kratos/v2/log"
 	"github.com/robfig/cron/v3"
 )
 
@@ -64,6 +65,11 @@ type NoticeRepo interface {
 type NoticeUseCase struct {
 	jobRepo    JobRepo
 	noticeRepo NoticeRepo
+	log        *log.Helper
+}
+
+func NewNoticeUseCase(jobRepo JobRepo, noticeRepo NoticeRepo, logger log.Logger) *NoticeUseCase {
+	return &NoticeUseCase{jobRepo: jobRepo, noticeRepo: noticeRepo, log: log.NewHelper(logger)}
 }
 
 func (n *NoticeUseCase) SubscribeNotice(ctx context.Context, request *pb.SubscribeNoticeRequest) (err error) {

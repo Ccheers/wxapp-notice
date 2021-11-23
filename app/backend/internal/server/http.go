@@ -1,6 +1,7 @@
 package server
 
 import (
+	pb "github.com/Ccheers/wxapp-notice/app/backend/api/notice/v1"
 	v1 "github.com/Ccheers/wxapp-notice/app/backend/api/wx/v1"
 	"github.com/Ccheers/wxapp-notice/app/backend/internal/service"
 	"github.com/go-kratos/kratos/v2/middleware/logging"
@@ -12,7 +13,7 @@ import (
 )
 
 // NewHTTPServer new a HTTP server.
-func NewHTTPServer(c *conf.Server, server *service.WxService, logger log.Logger) *http.Server {
+func NewHTTPServer(c *conf.Server, server *service.WxService, noticeServer *service.NoticeService, logger log.Logger) *http.Server {
 	var opts = []http.ServerOption{
 		http.Middleware(
 			recovery.Recovery(),
@@ -30,5 +31,6 @@ func NewHTTPServer(c *conf.Server, server *service.WxService, logger log.Logger)
 	}
 	srv := http.NewServer(opts...)
 	v1.RegisterWxHTTPServer(srv, server)
+	pb.RegisterNoticeHTTPServer(srv, noticeServer)
 	return srv
 }

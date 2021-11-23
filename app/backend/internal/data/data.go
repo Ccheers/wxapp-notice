@@ -21,6 +21,7 @@ type BucketName interface {
 func registerBucketNames() []BucketName {
 	return []BucketName{
 		new(JobRepoImpl),
+		new(NoticeRepoImpl),
 	}
 }
 
@@ -56,6 +57,7 @@ func NewData(c *conf.Data, logger log.Logger) (*Data, func(), error) {
 	}
 	cleanup := func() {
 		helper.Info("closing the data resources")
+		db.Close()
 	}
 	return &Data{
 		db:  db,

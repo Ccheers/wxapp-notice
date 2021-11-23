@@ -1,4 +1,5 @@
 // pages/event_list/event_list.js
+const app = getApp()
 Page({
 
   /**

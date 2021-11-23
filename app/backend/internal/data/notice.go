@@ -13,7 +13,7 @@ type NoticeRepoImpl struct {
 	log  *log.Helper
 }
 
-func NewNoticeRepoImpl(data *Data, logger log.Logger) *NoticeRepoImpl {
+func NewNoticeRepoImpl(data *Data, logger log.Logger) biz.NoticeRepo {
 	return &NoticeRepoImpl{data: data, log: log.NewHelper(logger)}
 }
 
@@ -35,6 +35,8 @@ func (n *NoticeRepoImpl) AddOpenID(ctx context.Context, openID string) error {
 
 func (n *NoticeRepoImpl) CheckOpenID(ctx context.Context, openID string) error {
 	return n.data.db.View(func(tx *bbolt.Tx) error {
+		n.log.Infof("openID: %s", openID)
+
 		b := tx.Bucket([]byte(n.TableName()))
 		res := b.Get([]byte(openID))
 		if len(res) == 0 {

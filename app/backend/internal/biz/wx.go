@@ -15,8 +15,8 @@ type WxUseCase struct {
 	conf   *conf.WxAppConfig
 }
 
-func NewWxUseCase(wxRepo WxRepo, l log.Logger) *WxUseCase {
-	return &WxUseCase{wxRepo: wxRepo, log: log.NewHelper(l)}
+func NewWxUseCase(wxRepo WxRepo, l log.Logger, conf *conf.WxAppConfig) *WxUseCase {
+	return &WxUseCase{wxRepo: wxRepo, log: log.NewHelper(l), conf: conf}
 }
 
 type WxRepo interface {
