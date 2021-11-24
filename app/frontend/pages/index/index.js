@@ -55,6 +55,13 @@ Page({
 
   },
   checkSub() {
+    var can_sub = wx.getStorageSync('can_sub')
+    if (can_sub == false) {
+      this.setData({
+        can_sub: false
+      })
+    }
+
     var subed = true
     wx.getSetting({
       withSubscriptions: true,
@@ -86,6 +93,7 @@ Page({
         this.setData({
           can_sub: !res.data.subscribed
         })
+        wx.setStorageSync('can_sub', !res.data.subscribed)
       },
       fail: (res) => {
         this.setData({

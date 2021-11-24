@@ -7,9 +7,19 @@ App({
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
 
+    var openid = wx.getStorageSync('openid')
+    if (openid) {
+      this.globalData.openid = openid
+      this.globalData.launched = true
+      this.globalData.launchedCallback4Index()
+    } else {
+      this.login()
+    }
+  },
+  login() {
     // 登录
     wx.login({
-      success: res => {
+      success: (res) => {
         console.log(res)
         wx.request({
           url: this.globalData.serverHost + '/sns/jscode2session', //仅为示例，并非真实的接口地址
@@ -23,6 +33,7 @@ App({
             this.globalData.openid = res.data.openid
             this.globalData.launched = true
             this.globalData.launchedCallback4Index()
+            wx.setStorageSync('openid', this.globalData.openid)
           },
           fail(res) {
             console.log(res)
