@@ -2,10 +2,8 @@ const serverHost = "https://wxapi.ericcai.fun"
 // app.js
 App({
   onLaunch() {
-    // 展示本地存储能力
-    const logs = wx.getStorageSync('logs') || []
-    logs.unshift(Date.now())
-    wx.setStorageSync('logs', logs)
+    // 初始化月份选项
+    this.initvarFrequencyDetailMonthOptions()
 
     var openid = wx.getStorageSync('openid')
     if (openid) {
@@ -15,6 +13,16 @@ App({
     } else {
       this.login()
     }
+    
+    // 引入 color ui
+    wx.getSystemInfo({
+      success: e => {
+        this.globalData.StatusBar = e.statusBarHeight;
+        let custom = wx.getMenuButtonBoundingClientRect();
+        this.globalData.Custom = custom;  
+        this.globalData.CustomBar = custom.bottom + custom.top - e.statusBarHeight;
+      }
+    })
   },
   login() {
     // 登录
@@ -43,11 +51,35 @@ App({
       }
     })
   },
+  initvarFrequencyDetailMonthOptions(){
+    var frequencyDetailMonthOptions = ["请选择"]
+    for (var i = 1; i < 32; i++) {
+      frequencyDetailMonthOptions.push(i.toString() + "号")
+    }
+    this.globalData.frequencyDetailMonthOptions = frequencyDetailMonthOptions
+  },
   globalData: {
     userInfo: null,
     openid: null,
     serverHost: serverHost,
     launched: false,
-    launchedCallback4Index: () => {}
+    launchedCallback4Index: () => {},
+    frequencyOptions: [
+      "一次",
+      "工作日",
+      "每周",
+      "每月",
+      "每天"
+    ],
+    frequencyDetailWeekOptions: [
+      "周日",
+      "周一",
+      "周二",
+      "周三",
+      "周四",
+      "周五",
+      "周六",
+    ],
+    frequencyDetailMonthOptions: []
   }
 })

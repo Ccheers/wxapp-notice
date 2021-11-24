@@ -71,7 +71,8 @@ message PutNoticeReply {
 }
 
 message DeleteNoticeRequest {
-  string id = 1 [(validate.rules).string = {min_len:1}];
+  uint64 id = 1 [(validate.rules).uint64 = {gt:0}];
+  string openid = 2 [(validate.rules).string = {min_len:1}];
 }
 
 message DeleteNoticeReply {

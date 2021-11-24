@@ -4,8 +4,19 @@
 <mp-form-page title="列表">
     <mp-cells ext-class="my-cells">
         <mp-cell>
-            <mp-slideview wx:for="{{eventList}}" wx:key="id" bindbuttontap="" buttons="{{slideButtons}}" slideviewId="{{index}}" data="{{item.id}}">
-                <view>{{item.content}}</view>
+            <mp-slideview wx:for="{{eventList}}" wx:key="id" bindbuttontap="onTapSlideButton" buttons="{{slideButtons}}" slideviewId="{{index}}" data="{{item.id}}">
+                <view class="cu-item">
+                    <view class="content padding-tb-sm">
+                        <view>
+                            <view class="cu-tag round bg-orange light">{{frequencyOptions[item.frequency]}}</view>
+                            <view class="cu-tag round bg-olive light">{{item.frequencyDetailDisplay}}</view>
+                            <view class="cu-tag round bg-blue light">{{item.time}}</view>
+                        </view>
+                        <view>
+                            {{item.content}}
+                        </view>
+                    </view>
+                </view>
             </mp-slideview>
         </mp-cell>
     </mp-cells>

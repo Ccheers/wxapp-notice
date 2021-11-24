@@ -117,8 +117,8 @@ func (j *Job) Fixed() error {
 }
 
 type NoticeRepo interface {
-	AddOpenID(ctx context.Context, openID string) error
-	CheckOpenID(ctx context.Context, openID string) error
+	AddOpenID(ctx context.Context, openid string) error
+	CheckOpenID(ctx context.Context, openid string) error
 }
 
 type NoticeUseCase struct {
@@ -184,8 +184,11 @@ func (n *NoticeUseCase) AddNotice(ctx context.Context, job *Job) (*Job, error) {
 	return n.jobRepo.PutJob(ctx, job)
 }
 
-func (n *NoticeUseCase) DeleteJob(ctx context.Context, openID string, jobID uint64) error {
-	return n.jobRepo.DeleteJob(ctx, openID, jobID)
+func (n *NoticeUseCase) DeleteJob(ctx context.Context, openid string, jobID uint64) error {
+	return n.jobRepo.DeleteJob(ctx, openid, jobID)
+}
+func (n *NoticeUseCase) ListJobs(ctx context.Context, openid string) ([]*Job, error) {
+	return n.jobRepo.GetAllJobs(ctx, openid)
 }
 
 func (n *NoticeUseCase) WithCronFunc(openid string, jobID uint64) func() {

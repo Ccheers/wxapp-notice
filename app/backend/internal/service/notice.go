@@ -45,11 +45,37 @@ func (s *NoticeService) CheckSubscribeStatus(ctx context.Context, req *pb.CheckS
 }
 
 func (s *NoticeService) DeleteNotice(ctx context.Context, request *pb.DeleteNoticeRequest) (*pb.DeleteNoticeReply, error) {
-	panic("implement me")
+	err := s.noticeUseCase.DeleteJob(ctx, request.GetOpenid(), request.GetId())
+	if err != nil {
+		return nil, err
+	}
+	return &pb.DeleteNoticeReply{
+		Code: http.StatusOK,
+		Msg:  "success",
+	}, nil
 }
 
 func (s *NoticeService) ListNotice(ctx context.Context, request *pb.ListNoticeRequest) (*pb.ListNoticeReply, error) {
-	panic("implement me")
+	jobs, err := s.noticeUseCase.ListJobs(ctx, request.GetOpenid())
+	if err != nil {
+		return nil, err
+	}
+	list := make([]*pb.NoticeInfo, 0, len(jobs))
+	for _, job := range jobs {
+		list = append(list, &pb.NoticeInfo{
+			Id:              int64(job.ID),
+			Openid:          job.Openid,
+			Content:         job.Content,
+			Time:            job.Time,
+			Frequency:       job.Frequency,
+			FrequencyDetail: job.FrequencyDetail,
+		})
+	}
+	return &pb.ListNoticeReply{
+		Code:       http.StatusOK,
+		Msg:        "success",
+		NoticeInfo: list,
+	}, nil
 }
 
 func (s *NoticeService) PutNotice(ctx context.Context, request *pb.PutNoticeRequest) (*pb.PutNoticeReply, error) {

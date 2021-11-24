@@ -15,23 +15,9 @@ Page({
     btnDisabled: false,
     msg: "",
     msgType: "success",
-    frequencyOptions: [
-      "一次",
-      "工作日",
-      "每周",
-      "每月",
-      "每天"
-    ],
-    frequencyDetailWeekOptions: [
-      "周日",
-      "周一",
-      "周二",
-      "周三",
-      "周四",
-      "周五",
-      "周六",
-    ],
-    frequencyDetailMonthOptions: [],
+    frequencyOptions: app.globalData.frequencyOptions,
+    frequencyDetailWeekOptions: app.globalData.frequencyDetailWeekOptions,
+    frequencyDetailMonthOptions: app.globalData.frequencyDetailMonthOptions,
   },
   onFrequencyPickerChange(e) {
     var form = this.data.form
@@ -104,13 +90,6 @@ Page({
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    var frequencyDetailMonthOptions = ["请选择"]
-    for (var i = 1; i < 32; i++) {
-      frequencyDetailMonthOptions.push(i.toString() + "号")
-    }
-    this.setData({
-      frequencyDetailMonthOptions: frequencyDetailMonthOptions
-    })
   },
 
   /**
