@@ -56,7 +56,9 @@ func (w *WxRepoImpl) GetAccessToken(ctx context.Context, request *pb.GetAccessTo
 
 	if val, ok := w.cache.Load(request.Appid); ok {
 		if reply, ok := val.(*pb.GetAccessTokenReply); ok {
-			return reply, nil
+			if time.Now().Before(time.Unix(reply.ExpiresIn, 0)) {
+				return reply, nil
+			}
 		}
 	}
 
