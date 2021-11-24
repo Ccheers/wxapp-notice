@@ -12,6 +12,7 @@ Page({
       time: "00:00",
       content: ""
     },
+    btnDisabled: false,
     msg: "",
     msgType: "success",
     frequencyOptions: [
@@ -61,6 +62,9 @@ Page({
     })
   },
   submitForm() {
+    this.setData({
+      btnDisabled: true
+    })
     wx.request({
       url: app.globalData.serverHost + '/notice/v1/put',
       method: "POST",
@@ -81,9 +85,9 @@ Page({
           msg: "操作成功",
           msgType: "success"
         })
-
-        wx.navigateTo({
-          url: '../index/index'
+        // 在C页面内 navigateBack，将返回A页面
+        wx.navigateBack({
+          delta: 1
         })
         console.log(res.data)
       },
