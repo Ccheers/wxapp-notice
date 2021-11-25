@@ -45,3 +45,15 @@ func (n *NoticeRepoImpl) CheckOpenID(ctx context.Context, openID string) error {
 		return nil
 	})
 }
+
+func (n *NoticeRepoImpl) GetAllOpenID(ctx context.Context) ([]string, error) {
+	ids := make([]string, 0)
+	err := n.data.db.View(func(tx *bbolt.Tx) error {
+		c := tx.Bucket([]byte(n.TableName())).Cursor()
+		for k, v := c.First(); k != nil; k, v = c.Next() {
+			ids = append(ids, string(v))
+		}
+		return nil
+	})
+	return ids, err
+}

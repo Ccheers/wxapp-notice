@@ -119,6 +119,7 @@ func (j *Job) Fixed() error {
 type NoticeRepo interface {
 	AddOpenID(ctx context.Context, openid string) error
 	CheckOpenID(ctx context.Context, openid string) error
+	GetAllOpenID(ctx context.Context) ([]string, error)
 }
 
 type NoticeUseCase struct {
@@ -142,6 +143,34 @@ func NewNoticeUseCase(jobRepo JobRepo, wxRepo WxRepo, noticeRepo NoticeRepo, log
 	err := n.RegisterJobFunc(JobFuncNotice, callback(wxRepo, log.NewHelper(logger), wxConf))
 	if err != nil {
 		panic(err)
+	}
+	ids, err := n.noticeRepo.GetAllOpenID(context.Background())
+	if err != nil {
+		panic(err)
+	}
+
+	n.log.Infof("put jobs in openid: %+v", ids)
+	for _, id := range ids {
+		jobs, err := n.jobRepo.GetAllJobs(context.Background(), id)
+		if err != nil {
+			n.log.Errorf("get all jobs err: %s", err.Error())
+			continue
+		}
+		for _, job := range jobs {
+			n.log.Infof("job info: %+v", job)
+
+			eid, err := n.cron.AddCron(job.CronExpress, n.WithCronFunc(job.Openid, job.ID))
+			if err != nil {
+				n.log.Errorf("add cron err: %s", err.Error())
+				continue
+			}
+			job.CronID = eid
+			_, err = n.jobRepo.PutJob(context.Background(), job)
+			if err != nil {
+				n.log.Errorf("put job err: %s", err.Error())
+				continue
+			}
+		}
 	}
 	return n
 }
