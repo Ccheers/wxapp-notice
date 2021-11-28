@@ -67,6 +67,11 @@ func (j *JobRepoImpl) GetAllJobs(ctx context.Context, openid string) ([]*biz.Job
 	jobs := make([]*biz.Job, 0)
 	err := j.data.db.View(func(tx *bbolt.Tx) error {
 		b := tx.Bucket([]byte(j.TableNameWithOpenID(openid)))
+
+		if b == nil {
+			return errBucketNotExist
+		}
+
 		c := b.Cursor()
 
 		for k, v := c.First(); k != nil; k, v = c.Next() {
@@ -94,6 +99,9 @@ func (j *JobRepoImpl) GetJobByID(ctx context.Context, openid string, jobID uint6
 
 		b := tx.Bucket([]byte(j.TableNameWithOpenID(openid)))
 
+		if b == nil {
+			return errBucketNotExist
+		}
 		v := b.Get(itob.Itob(jobID))
 		j.log.Infof("v: %s", string(v))
 		err = json.Unmarshal(v, job)

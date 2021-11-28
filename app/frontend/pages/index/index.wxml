@@ -27,5 +27,6 @@
     </block>
     <button type="primary" bindtap="toEventList">提醒列表</button>
     <button type="primary" bindtap="toNewEvent">新增提醒</button>
+    <button type="primary" bindtap="toSignin">签到</button>
   </view>
 </view>

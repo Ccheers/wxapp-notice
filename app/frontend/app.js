@@ -51,6 +51,7 @@ App({
       }
     })
   },
+  
   initvarFrequencyDetailMonthOptions(){
     var frequencyDetailMonthOptions = ["请选择"]
     for (var i = 1; i < 32; i++) {

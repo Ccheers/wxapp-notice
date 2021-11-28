@@ -1,6 +1,7 @@
 package data
 
 import (
+	"errors"
 	"fmt"
 	"os"
 
@@ -12,7 +13,9 @@ import (
 )
 
 // ProviderSet is data providers.
-var ProviderSet = wire.NewSet(NewData, NewWxRepoImpl, NewJobRepoImpl, NewNoticeRepoImpl)
+var ProviderSet = wire.NewSet(NewData, NewWxRepoImpl, NewJobRepoImpl, NewNoticeRepoImpl, NewSignInRepoImpl)
+
+var errBucketNotExist = errors.New("bucket not exist")
 
 type BucketName interface {
 	TableName() string

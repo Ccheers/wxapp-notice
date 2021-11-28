@@ -1,0 +1,4 @@
+/* pages/signin/signin.wxss */
+.calendar {
+    --calendar-height: 500px;
+}

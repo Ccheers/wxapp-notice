@@ -1,0 +1,38 @@
+syntax = "proto3";
+import "google/api/annotations.proto";
+package api.signin.v1;
+
+option go_package = "github.com/Ccheers/wxapp-notice/app/backend/api/signin/v1;v1";
+option java_multiple_files = true;
+option java_package = "api.signin.v1";
+
+service Signin {
+  rpc Signin (SigninRequest) returns (SigninReply){
+    option (google.api.http) = {
+      post: "/signin"
+      body: "*"
+    };
+  };
+  rpc ListSignin (ListSigninRequest) returns (ListSigninReply){
+    option (google.api.http) = {
+      get: "/signin/list"
+    };
+  };
+}
+
+message SigninRequest {
+  string openid = 1;
+}
+message SigninReply {
+  int64 code = 1;
+  string  msg = 2;
+}
+
+message ListSigninRequest {
+  string openid = 1;
+}
+message ListSigninReply {
+  int64 code = 1;
+  string  msg = 2;
+  map<string, bool> list = 3;
+}

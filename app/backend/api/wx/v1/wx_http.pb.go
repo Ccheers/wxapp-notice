@@ -130,7 +130,7 @@ func (c *WxHTTPClientImpl) GetAccessToken(ctx context.Context, in *GetAccessToke
 func (c *WxHTTPClientImpl) SubscribeSend(ctx context.Context, in *SubscribeSendRequest, opts ...http.CallOption) (*SubscribeSendReply, error) {
 	var out SubscribeSendReply
 	pattern := "/cgi-bin/message/subscribe/send"
-	path := binding.EncodeURL(pattern, in, true)
+	path := binding.EncodeURL(pattern, in, false)
 	opts = append(opts, http.Operation("/api.wx.v1.Wx/SubscribeSend"))
 	opts = append(opts, http.PathTemplate(pattern))
 	err := c.cc.Invoke(ctx, "POST", path, in, &out, opts...)

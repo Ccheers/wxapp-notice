@@ -32,7 +32,10 @@ func initApp(confServer *conf.Server, confData *conf.Data, wxAppConfig *conf.WxA
 	cronCron := cron.NewCron(logger)
 	noticeUseCase := biz.NewNoticeUseCase(jobRepo, wxRepo, noticeRepo, logger, cronCron, wxAppConfig)
 	noticeService := service.NewNoticeService(noticeUseCase, logger)
-	httpServer := server.NewHTTPServer(confServer, wxService, noticeService, logger)
+	signInRepo := data.NewSignInRepoImpl(dataData, logger)
+	signInUseCase := biz.NewSignInUseCase(signInRepo)
+	signinService := service.NewSigninService(signInUseCase)
+	httpServer := server.NewHTTPServer(confServer, wxService, noticeService, signinService, logger)
 	app := newApp(logger, httpServer, cronCron)
 	return app, func() {
 		cleanup()

@@ -25,6 +25,12 @@ Page({
     })
   },
   // 事件处理函数
+  toSignin() {
+    wx.navigateTo({
+      url: '../signin/signin'
+    })
+  },
+  // 事件处理函数
   toNewEvent() {
     wx.navigateTo({
       url: '../new_event/new_event'

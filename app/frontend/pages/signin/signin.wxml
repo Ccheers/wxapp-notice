@@ -1,0 +1,6 @@
+<!--pages/signin/signin.wxml-->
+
+<view>
+    <van-calendar title="签到日历" poppable="{{ false }}" show-confirm="{{ false }}" class="calendar" formatter="{{ formatter }}" readonly="{{ true }}" />
+</view>
+<mp-toptips msg="{{msg}}" type="{{msgType}}" show="{{msg}}"></mp-toptips>
