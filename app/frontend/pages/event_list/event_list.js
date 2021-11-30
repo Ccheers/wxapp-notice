@@ -16,12 +16,12 @@ Page({
     frequencyDetailMonthOptions: app.globalData.frequencyDetailMonthOptions,
   },
   onTapSlideButton(data) {
-    console.log(this.data.eventList[data.detail.index].id)
+    console.log(data)
     wx.request({
       url: app.globalData.serverHost + '/notice/v1/del', //仅为示例，并非真实的接口地址
       method: "POST",
       data: {
-        id: this.data.eventList[data.detail.index].id,
+        id: data.currentTarget.id,
         openid: this.data.eventList[data.detail.index].openid
       },
       header: {

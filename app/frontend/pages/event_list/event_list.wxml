@@ -4,7 +4,7 @@
 <mp-form-page title="列表">
     <mp-cells ext-class="my-cells">
         <mp-cell>
-            <mp-slideview wx:for="{{eventList}}" wx:key="id" bindbuttontap="onTapSlideButton" buttons="{{slideButtons}}" slideviewId="{{index}}" data="{{item.id}}">
+            <mp-slideview wx:for="{{eventList}}" wx:key="id" bindbuttontap="onTapSlideButton" buttons="{{slideButtons}}" id="{{item.id}}">
                 <view class="cu-item">
                     <view class="content padding-tb-sm">
                         <view>
